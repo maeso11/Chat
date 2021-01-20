@@ -10,20 +10,18 @@ public class ClienteChat {
 
 	public static void main(String[] args) throws Exception {
 		Socket socket = null;
-		Socket socket2 = null;
 		BufferedReader bfr = null;
 		DataOutputStream oos = null;
 		DataInputStream isr = null;
 		try {
-			socket = new Socket("172.16.8.153", 9877);
-			socket2 = new Socket("172.16.8.138", 9877);
+			socket = new Socket("192.168.56.1", 9877);
 			//Escribe el mensaje
 			oos = new DataOutputStream(socket.getOutputStream());
 			oos.writeUTF("Hola");
 			oos.flush();
 			
 			//Recibe el mensaje
-			isr=new DataInputStream(socket2.getInputStream());
+			isr=new DataInputStream(socket.getInputStream());
 			String mensaje = String.valueOf(isr.readUTF());
 			System.out.println(mensaje);
 		}catch(IOException e) {
