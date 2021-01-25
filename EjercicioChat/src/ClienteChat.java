@@ -15,12 +15,13 @@ public class ClienteChat {
 		DataInputStream isr = null;
 		try {
 			socket = new Socket("192.168.56.1", 9877);
+			
 			//Escribe el mensaje
 			oos = new DataOutputStream(socket.getOutputStream());
 			oos.writeUTF("Hola");
 			oos.flush();
 			
-			//Recibe el mensaje
+			//Muestra el mensaje que se ha enviado
 			isr=new DataInputStream(socket.getInputStream());
 			String mensaje = String.valueOf(isr.readUTF());
 			System.out.println(mensaje);

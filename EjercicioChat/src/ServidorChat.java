@@ -26,23 +26,36 @@ public class ServidorChat implements Runnable{
 		DataInputStream ois = null;
 		OutputStream os = null;
 		DataOutputStream pw = null;
+		Socket mensajeEnviado = null;
+		DataOutputStream enviar = null;
+		
 		try {
 			socketEscucha = new ServerSocket(9877);
 			while (true) {
 				try {
+					//Escucha la petición del cliente
 					conexion = socketEscucha.accept();
 					System.out.println("Conexion recibida!");
 					System.out.println("Dirección IP: " + conexion.getInetAddress());
+					
+					//Recibe el mensaje y lo lee
 					is = conexion.getInputStream();
 					ois = new DataInputStream(is);
 					String mensaje = ois.readUTF();
-					//Calculo calculo = (Calculo) ois.readObject();
-					/* Calculamos el resultado */
-					//Integer result = this.calcular(calculo);
+					
+					//Envia el mensaje al cliente(clase ClienteChat)
 					os = conexion.getOutputStream();
 					pw = new DataOutputStream(os);
 					pw.writeUTF(mensaje);
 					pw.flush();
+					
+					//Envia el mensaje al cliente(clase Cliente2)
+					mensajeEnviado = new Socket("192.168.137", 9999);
+					enviar = new DataOutputStream(mensajeEnviado.getOutputStream());
+					enviar.writeUTF(mensaje);
+					enviar.flush();
+					
+					
 				} catch (IOException e) {
 					System.out.println("Error al aceptar conexion "+e.getMessage());
 					e.printStackTrace();
@@ -59,6 +72,12 @@ public class ServidorChat implements Runnable{
 					}
 					if (null != conexion) {
 						conexion.close();
+					}
+					if (null != mensajeEnviado) {
+						mensajeEnviado.close();
+					}
+					if (null != enviar) {
+						enviar.close();
 					}
 				}
 			}
