@@ -11,19 +11,19 @@ public class ClienteChat {
 	public static void main(String[] args) throws Exception {
 		Socket socket = null;
 		BufferedReader bfr = null;
-		DataOutputStream oos = null;
-		DataInputStream isr = null;
+		ObjectOutputStream oos = null;
+		ObjectInputStream isr = null;
 		try {
 			socket = new Socket("192.168.56.1", 9877);
 			
 			//Escribe el mensaje
-			oos = new DataOutputStream(socket.getOutputStream());
-			oos.writeUTF("Hola");
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			oos.writeObject(new Mensaje("Hola", new Usuario("127.0.0.1", "Yo")));
 			oos.flush();
 			
 			//Muestra el mensaje que se ha enviado
-			isr=new DataInputStream(socket.getInputStream());
-			String mensaje = String.valueOf(isr.readUTF());
+			isr=new ObjectInputStream(socket.getInputStream());
+			String mensaje = String.valueOf(isr.readObject());
 			System.out.println(mensaje);
 		}catch(IOException e) {
 			e.printStackTrace();
