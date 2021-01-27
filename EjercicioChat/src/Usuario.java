@@ -1,20 +1,14 @@
 
 public class Usuario implements java.io.Serializable{
 	
-	String ip;
 	String nombre;
+	String mensaje;
 	
 	
-	public Usuario(String ip, String nombre) {
+	public Usuario(String nombre, String mensaje) {
 		super();
-		this.ip = ip;
 		this.nombre = nombre;
-	}
-	public String getIp() {
-		return ip;
-	}
-	public void setIp(String ip) {
-		this.ip = ip;
+		this.mensaje = mensaje;
 	}
 	public String getNombre() {
 		return nombre;
@@ -22,10 +16,17 @@ public class Usuario implements java.io.Serializable{
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	public String getMensaje() {
+		return mensaje;
+	}
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
 	@Override
 	public String toString() {
-		return "Usuario [ip=" + ip + ", nombre=" + nombre + "]";
+		return "Usuario [nombre=" + nombre + ", mensaje=" + mensaje + "]";
 	}
+	
 	
 	
 

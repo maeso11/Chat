@@ -26,9 +26,7 @@ public class ServidorChat implements Runnable{
 		ObjectInputStream ois = null;
 		OutputStream os = null;
 		ObjectOutputStream pw = null;
-		Mensaje mensaje;
 		Usuario user;
-		Socket envia;
 		
 		try {
 			socketEscucha = new ServerSocket(9877);
@@ -37,18 +35,18 @@ public class ServidorChat implements Runnable{
 					//Escucha la petición del cliente
 					conexion = socketEscucha.accept();
 					System.out.println("Conexion recibida!");
-					System.out.println("Dirección IP: " + conexion.getInetAddress());
 					
 					//Recibe el mensaje y lo lee
 					is = conexion.getInputStream();
 					ois = new ObjectInputStream(is);
-					mensaje = (Mensaje) ois.readObject();
+					user = (Usuario) ois.readObject();
+					System.out.println("Se ha conectado " + user.getNombre());
 					
 					//Envia el mensaje al cliente(clase ClienteChat)
-					envia = new Socket(mensaje.usuario.getIp(), 9877);
-					os = envia.getOutputStream();
+					
+					os = conexion.getOutputStream();
 					pw = new ObjectOutputStream(os);
-					pw.writeObject(mensaje);
+					pw.writeObject(user);
 					pw.flush();
 					
 					

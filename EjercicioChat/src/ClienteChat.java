@@ -13,12 +13,13 @@ public class ClienteChat {
 		BufferedReader bfr = null;
 		ObjectOutputStream oos = null;
 		ObjectInputStream isr = null;
+
 		try {
 			socket = new Socket("192.168.56.1", 9877);
 			
 			//Escribe el mensaje
 			oos = new ObjectOutputStream(socket.getOutputStream());
-			oos.writeObject(new Mensaje("Hola", new Usuario("127.0.0.1", "Yo")));
+			oos.writeObject(new Usuario("maeso", "hola"));
 			oos.flush();
 			
 			//Muestra el mensaje que se ha enviado
