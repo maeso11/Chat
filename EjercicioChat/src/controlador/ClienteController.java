@@ -54,6 +54,7 @@ public class ClienteController {
 			Mensaje datos = new Mensaje();
 			datos.setMensaje(mensajeChat.getText());
 			datos.setDestino(tfDestino.getText());
+			datos.setTipo("enviar");
 			escribir = new ObjectOutputStream(socket.getOutputStream());
 			escribir.writeObject(datos);
 			escribir.flush();
@@ -71,9 +72,15 @@ public class ClienteController {
 	public void recibir() throws IOException, ClassNotFoundException {
 		Socket socket = null;
 		ObjectInputStream leer = null;
+		ObjectOutputStream escribir = null;
 		try {
 			
 			socket = new Socket("localhost", 9999);//Direccion ip donde se encuentra el servidor
+			Mensaje datos = new Mensaje();
+			datos.setTipo("recibir");
+			escribir = new ObjectOutputStream(socket.getOutputStream());
+			escribir.writeObject(datos);
+			escribir.flush();
 			leer = new ObjectInputStream(socket.getInputStream());
 			Mensaje mensajeRecibido=(Mensaje) leer.readObject();
 			

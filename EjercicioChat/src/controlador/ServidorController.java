@@ -19,7 +19,7 @@ public class ServidorController implements Runnable{
 	//HashMap <String, ArrayList<String>> mensajesGuardados = null;
 	
 	public String escribirMensaje(Mensaje mensaje) {
-		String contenido = mensaje.getMensaje();
+		String contenido = mensaje.getUsuario() + ": " + mensaje.getMensaje();
 		
 		return contenido;
 		
@@ -42,28 +42,32 @@ public class ServidorController implements Runnable{
 					leer = new ObjectInputStream(socket.getInputStream());
 					mensajeRecibido = (Mensaje) leer.readObject();
 					
-					
-					mensajes.add(mensajeRecibido.getMensaje());
-					//System.out.println(mensajeRecibido.getMensaje());
-					System.out.println(mensajes);
-					//mensajesGuardados.put(mensajeRecibido.getDestino(), mensajes);
-					/*System.out.println(mensajesGuardados.keySet());
-					for (java.util.Map.Entry<String, ArrayList<String>> entry : mensajesGuardados.entrySet()) {
-			            System.out.println(entry.getKey() + ": ");
-			            for (String s : entry.getValue()) {
-			                System.out.println(s);
-			            }
-			        }*/
-					areaChat.appendText("\n"+mensajeRecibido.getMensaje() + " para " + mensajeRecibido.getDestino());
-					
-					//Reenviar mensaje
-					/*	String mensajeEnviar = (this).escribirMensaje(mensajeRecibido);
-						escribir = new ObjectOutputStream(socket.getOutputStream());
+					if(mensajeRecibido.getTipo().equalsIgnoreCase("enviar")) {
+						mensajes.add(mensajeRecibido.getMensaje());
+						//System.out.println(mensajeRecibido.getMensaje());
+						System.out.println(mensajes);
+						//mensajesGuardados.put(mensajeRecibido.getDestino(), mensajes);
+						/*System.out.println(mensajesGuardados.keySet());
+						for (java.util.Map.Entry<String, ArrayList<String>> entry : mensajesGuardados.entrySet()) {
+				            System.out.println(entry.getKey() + ": ");
+				            for (String s : entry.getValue()) {
+				                System.out.println(s);
+				            }
+				        }*/
+						areaChat.appendText("\n"+mensajeRecibido.getMensaje() + " para " + mensajeRecibido.getDestino());		
+					}
+					if(mensajeRecibido.getTipo().equalsIgnoreCase("recibir")) {
+						//Reenviar mensaje
 						
-						escribir.writeObject(mensajeEnviar);
-						escribir.flush();
-						*/			
-					
+						for(int i = 0; i<mensajes.size(); i++) {
+							String mensajeEnviar = (this).escribirMensaje(mensajeRecibido);
+							escribir = new ObjectOutputStream(socket.getOutputStream());	
+							escribir.writeObject(mensajeEnviar);
+							escribir.flush();
+							mensajes.remove(i);							
+						}
+
+					}
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
 					throw e;
