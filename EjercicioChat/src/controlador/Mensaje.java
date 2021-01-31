@@ -5,8 +5,16 @@ import java.io.Serializable;
 public class Mensaje implements Serializable {
 	
 	private String destino;
+	private String usuario;
 	private String mensaje;
 	
+	
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
 	public String getDestino() {
 		return destino;
 	}

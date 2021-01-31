@@ -68,7 +68,7 @@ public class ClienteController {
 	
 	//Botón que recibe los mensajes
 	@FXML
-	public void recibir(MouseEvent ev) throws IOException, ClassNotFoundException {
+	public void recibir() throws IOException, ClassNotFoundException {
 		Socket socket = null;
 		ObjectInputStream leer = null;
 		try {
