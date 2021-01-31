@@ -18,12 +18,6 @@ public class ServidorController implements Runnable{
 	@FXML private TextArea areaChat;
 	//HashMap <String, ArrayList<String>> mensajesGuardados = null;
 	
-	public String escribirMensaje(Mensaje mensaje) {
-		String contenido = mensaje.getUsuario() + ": " + mensaje.getMensaje();
-		
-		return contenido;
-		
-	}
 	public void escucha() throws IOException, ClassNotFoundException {
 		System.out.println("Arrancando el servidor");
 		ServerSocket socketServidor = null;
@@ -31,7 +25,7 @@ public class ServidorController implements Runnable{
 		ObjectOutputStream escribir = null;
 		ObjectInputStream leer = null;
 		Mensaje mensajeRecibido;
-		ArrayList <String>mensajes = new ArrayList<String>();
+		ArrayList <Mensaje>mensajes = new ArrayList<Mensaje>();
 		try {
 			socketServidor = new ServerSocket(9999);
 
@@ -43,7 +37,7 @@ public class ServidorController implements Runnable{
 					mensajeRecibido = (Mensaje) leer.readObject();
 					
 					if(mensajeRecibido.getTipo().equalsIgnoreCase("enviar")) {
-						mensajes.add(mensajeRecibido.getMensaje());
+						mensajes.add(mensajeRecibido);
 						//System.out.println(mensajeRecibido.getMensaje());
 						System.out.println(mensajes);
 						//mensajesGuardados.put(mensajeRecibido.getDestino(), mensajes);
@@ -60,7 +54,7 @@ public class ServidorController implements Runnable{
 						//Reenviar mensaje
 						
 						for(int i = 0; i<mensajes.size(); i++) {
-							String mensajeEnviar = (this).escribirMensaje(mensajeRecibido);
+							Mensaje mensajeEnviar = mensajes.get(i);
 							escribir = new ObjectOutputStream(socket.getOutputStream());	
 							escribir.writeObject(mensajeEnviar);
 							escribir.flush();

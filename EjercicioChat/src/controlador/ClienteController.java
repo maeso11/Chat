@@ -84,8 +84,8 @@ public class ClienteController {
 			leer = new ObjectInputStream(socket.getInputStream());
 			Mensaje mensajeRecibido=(Mensaje) leer.readObject();
 			
-			campoChat.appendText("/n" + nombreUser.getText() + mensajeRecibido.getMensaje());
-		
+			campoChat.appendText(nombreUser.getText() + ": " + mensajeRecibido.getMensaje());
+			campoChat.appendText("");
 		}catch(IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 			throw e;
