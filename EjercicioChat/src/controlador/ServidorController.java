@@ -13,21 +13,28 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class ServidorController {
+public class ServidorController implements Runnable{
 	
 	@FXML private TextArea areaChat;
+	//HashMap <String, ArrayList<String>> mensajesGuardados = null;
 	
-	public void guardarMensaje () {
+	public String escribirMensaje(Mensaje mensaje) {
+		String contenido = mensaje.getMensaje();
+		
+		return contenido;
 		
 	}
-	@FXML
-	public void initialize() throws Exception {
+	public ServidorController (){
+		Thread hilo = new Thread(this);
+		hilo.start();
+	}
+	@Override
+	public void run() {
 		System.out.println("Arrancando el servidor");
 		ServerSocket socketServidor = null;
 		Socket socket = null;
 		ObjectOutputStream escribir = null;
 		ObjectInputStream leer = null;
-		HashMap <String, ArrayList<String>> mensajesGuardados = null;
 		try {
 			
 			String nombre, ip, mensaje;
@@ -40,34 +47,34 @@ public class ServidorController {
 				leer = new ObjectInputStream(socket.getInputStream());
 				mensajeRecibido = (Mensaje) leer.readObject();
 				
-				ArrayList <String>mensajes = new ArrayList<>();
+				ArrayList <String>mensajes = new ArrayList<String>();
 				mensajes.add(mensajeRecibido.getMensaje());
-				mensajesGuardados.put(mensajeRecibido.getDestino(), mensajes);
-				
+				System.out.println(mensajeRecibido.getMensaje());
+				//mensajesGuardados.put(mensajeRecibido.getDestino(), mensajes);
+				/*System.out.println(mensajesGuardados.keySet());
 				for (java.util.Map.Entry<String, ArrayList<String>> entry : mensajesGuardados.entrySet()) {
 		            System.out.println(entry.getKey() + ": ");
 		            for (String s : entry.getValue()) {
 		                System.out.println(s);
 		            }
-		        }
-				//areaChat.appendText("\n"+nombre + ": " + mensaje + " para " + ip);
+		        }*/
+				areaChat.appendText("\n"+mensajeRecibido.getMensaje() + " para " + mensajeRecibido.getDestino());
 				
 				//Reenviar mensaje
 				
-				//Socket enviaDestinatario = new Socket(ip, 9090);
+				String mensajeEnviar = (this).escribirMensaje(mensajeRecibido);
+				escribir = new ObjectOutputStream(socket.getOutputStream());
 				
-				ObjectOutputStream paqueteReenvio = new ObjectOutputStream(socket.getOutputStream());
+				escribir.writeObject(mensajeEnviar);
+				escribir.flush();
 				
-				paqueteReenvio.writeObject(mensajeRecibido);
-				
-				paqueteReenvio.close();
+				escribir.close();
 				
 				socket.close();
 				
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
-			throw e;
 		} 
 	}
 }
